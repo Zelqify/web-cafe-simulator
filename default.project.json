@@ -4,22 +4,24 @@
     "$className": "DataModel",
 
     "ReplicatedStorage": {
-      "shared": {
-        "$path": "src/shared"
+      "Controllers": {
+        "$path": "src/Controllers"
       }
     },
 
     "ServerScriptService": {
-      "server": {
-        "$path": "src/server"
+        "$path": "src/Server"
+    },
+
+    "ServerStorage": {
+      "Services":{
+        "$path": "src/Services"
       }
     },
 
     "StarterPlayer": {
       "StarterPlayerScripts": {
-        "client": {
           "$path": "src/client"
-        }
       }
     },
 
