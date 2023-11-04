@@ -28,6 +28,11 @@ function PlotController:KnitStart()
 
 	MenuGUI:WaitForChild("PlayButton").MouseButton1Up:Connect(function()
 		local createNewPlot = PlotService.createNewPlot:Fire()
+		local CameraController = Knit.GetController("CameraController")
+		local VisualEffectsController = Knit.GetController("VisualEffectsController")
+		CameraController.isOnTarget = false
+		MenuGUI.Visible = false
+		VisualEffectsController:PlayLoadEffect(1.5)
 	end)
 end
 

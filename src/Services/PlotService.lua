@@ -17,7 +17,9 @@ function createPlot(player)
         ["Name"] = player.Name .. "'s Web Cafe",
         ["Cash"] = 1000,
         ["Building"] = "Default_1",
+        ["PlotLocation"] = game.Workspace.Plots:FindFirstChild("PLOT")
     }
+    PlotService.Plots[player.Name].PlotLocation.Name = player.Name
     print("Successfully created plot for " .. player.Name)
     print(PlotService.Plots[player.Name])
 end
