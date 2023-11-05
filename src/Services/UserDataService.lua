@@ -12,7 +12,10 @@ local Players = game.Players
 local Packages = ReplicatedStorage.Packages
 local Knit = require(Packages.Knit)
 
-local UserDataService = Knit.CreateService {Name = "UserDataService",Client = {}}
+local UserDataService = Knit.CreateService {Name = "UserDataService",Client = {
+    getData = Knit.CreateSignal(),
+    registerPlot = Knit.CreateSignal(),
+}}
 local ProfileService = require(ServerScriptService.ProfileService)
 
 --// Data Management
@@ -30,6 +33,8 @@ local ProfileStore = ProfileService.GetProfileStore(
 )
 
 --// Functions
+
+
 
 local function LoadData(player)
     local profile = ProfileStore:LoadProfileAsync("Player_" .. player.UserId)
@@ -54,7 +59,9 @@ local function LoadData(player)
 end
 
 local function SaveData(player)
-    
+    if UserDataService.Profiles[player] then
+        UserDataService.Profiles[player]:Release()
+    end
 end
 
 Players.PlayerAdded:Connect(function(Player)
@@ -63,13 +70,47 @@ Players.PlayerAdded:Connect(function(Player)
     warn(playerData)
 end)
 
-Players.PlayerRemoving:Connect(function()
+Players.PlayerRemoving:Connect(function(player)
     if autoSave == false then return end
-    print(SaveData(player))
+    SaveData(player)
 end)
 
+local function getProfile(Player)
+    assert(UserDataService.Profiles[Player], string.format("Profile does not exist for %s", Player.UserId))
+    return UserDataService.Profiles[Player]
+end
 
+function UserDataService:Get(player, key)
+    local profile = getProfile(player)
+    return profile.Data["Saves"][PlotKey]
+end
 
+function UserDataService:Set(player, PlotKey, value)
+    local profile = getProfile(player)
+    profile.Data["Saves"][PlotKey] = value
+end
 
+function UserDataService:Update(player, key, callback)
+    local profile = getProfile(player)
+    local oldData = self:Get(player, key)
+    local newData = callback(oldData)
+    self:Set(player, key, newData)
+end
+
+function UserDataService:KnitStart()
+    print("UserDataService has been started")
+    UserDataService.Client.getData:Connect(function(player)
+        print("Contacted!")
+        UserDataService.Client.getData:Fire(player, getProfile(player).Data)
+    end)
+    UserDataService.Client.registerPlot:Connect(function(player)
+        print("Registering plot!")
+        local profile = getProfile(player)
+        local PlotKey = tostring(#profile.Data.Saves + 1)
+        self:Set(player, PlotKey, {"Test plotValue!"})
+        print(getProfile(player))
+    end)
+    
+end
 
 return UserDataService
