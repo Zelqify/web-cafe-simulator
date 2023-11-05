@@ -7,6 +7,7 @@ local PlotService = Knit.CreateService {
 Name = "PlotService",
 Client = {
 createNewPlot = Knit.CreateSignal(),
+loadUserSaves = Knit.CreateSignal(),
 }
 }
 
@@ -28,6 +29,10 @@ function PlotService:KnitInit()
     self.Client.createNewPlot:Connect(function(player)
         createPlot(player)
     end)
+    self.Client.loadUserSaves:Connect(function(player)
+        return 
+    end)
+
 end
 
 function PlotService:KnitStart()
