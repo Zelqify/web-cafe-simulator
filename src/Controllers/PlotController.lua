@@ -1,11 +1,17 @@
 local ReplicatedStorage = game.ReplicatedStorage
 local RunService = game:GetService("RunService")
+local TweenService = game:GetService("TweenService")
 local Packages = ReplicatedStorage:WaitForChild("Packages")
 
 local Knit = require(Packages:WaitForChild("Knit"))
 
 local PlotController = Knit.CreateController {Name = "PlotController"}
 
+
+--// Configurables
+
+local globalTweenDuration = 1
+local globalTweenInfo = TweenInfo.new(globalTweenDuration, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut)
 
 -- // Variables
 
@@ -38,10 +44,15 @@ function PlotController:KnitStart()
 		--local createNewPlot = PlotService.createNewPlot:Fire()
 		CameraController = Knit.GetController("CameraController")
 		isSelectingPlot = true
-	--	local VisualEffectsController = Knit.GetController("VisualEffectsController")
-	--CameraController.isOnTarget = false
-		MenuGUI.Visible = false
+		--	local VisualEffectsController = Knit.GetController("VisualEffectsController")
+		--CameraController.isOnTarget = false
+		TweenService:Create(MenuGUI, globalTweenInfo, {["Position"] = UDim2.new(0,0,1,0)}):Play()
+		PlotSelectorGUI.Position = UDim2.new(0,0,1,0)
 		PlotSelectorGUI.Visible = true
+		TweenService:Create(PlotSelectorGUI, globalTweenInfo, {["Position"] = UDim2.new(0,0,0,0)}):Play()
+		wait(globalTweenDuration)
+		MenuGUI.Visible = false
+		MenuGUI.Position = UDim2.new(0,0,0,0)
 
 	-- VisualEffectsController:PlayLoadEffect(1.5)
 	end)
